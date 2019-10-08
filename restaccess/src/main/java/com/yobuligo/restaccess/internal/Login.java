@@ -60,9 +60,7 @@ public class Login extends BroadcastReceiver implements ILogin {
         AuthorizationRequest request = builder.build();
 
         AuthorizationService authorizationService = new AuthorizationService(context);
-        String action = "com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE";
-        Intent postAuthorizationIntent = new Intent(action);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(context, request.hashCode(), postAuthorizationIntent, 0);
+        Intent postAuthorizationIntent = new Intent(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
@@ -97,7 +95,7 @@ public class Login extends BroadcastReceiver implements ILogin {
         if (intent != null) {
             String action = intent.getAction();
             switch (action) {
-                case "com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE":
+                case IDataContext.HANDLE_AUTHORIZATION_RESPONSE:
                     if (!intent.hasExtra(IDataContext.USED_INTENT)) {
                         handleAuthorizationResponse(intent);
                         intent.putExtra(IDataContext.USED_INTENT, true);

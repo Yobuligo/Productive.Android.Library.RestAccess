@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.yobuligo.restaccess.api.AuthorizationRequestConfig;
 import com.yobuligo.restaccess.api.IAuthorizationRequestConfig;
 import com.yobuligo.restaccess.api.RestAccess;
+import com.yobuligo.restaccess.internal.IDataContext;
 import com.yobuligo.restaccess.internal.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Register on Broadcast Events
                 IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction("com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE");
+                intentFilter.addAction(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);
                 registerReceiver(login, intentFilter);
 
                 restAccess.executeLogin(login);
