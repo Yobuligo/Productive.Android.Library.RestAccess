@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.yobuligo.restaccess.api.AuthorizationRequestConfig;
+import com.yobuligo.restaccess.api.IAuthorizationRequestConfig;
+import com.yobuligo.restaccess.api.RestAccess;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +28,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                IAuthorizationRequestConfig authorizationRequestConfig = new AuthorizationRequestConfig(
+                        "http://10.0.2.2:8080/auth/realms/demo/protocol/openid-connect/auth",
+                        "http://10.0.2.2:8080/auth/realms/demo/protocol/openid-connect/token",
+                        "login-app"
+                );
+
+                RestAccess restAccess = new RestAccess(authorizationRequestConfig);
+                restAccess.login(view.getContext());
+
             }
         });
     }
