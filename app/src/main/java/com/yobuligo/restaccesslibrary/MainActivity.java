@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
                         "login-app"
                 );
 
-                RestAccess restAccess = new RestAccess(authorizationRequestConfig);
+                RestAccess restAccess = new RestAccess(authorizationRequestConfig, view.getContext());
 
-                Login login = restAccess.createLogin(view.getContext());
+                Login login = restAccess.createLogin();
 
                 //Register on Broadcast Events
                 IntentFilter intentFilter = new IntentFilter();

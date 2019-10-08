@@ -25,13 +25,10 @@ public class Login extends BroadcastReceiver implements ILogin {
 
     private AuthState mAuthState;
     private IDataContext dataContext;
-    private Context context;
 
-    public Login(){}
 
-    public Login(IDataContext dataContext, Context context) {
+    public Login(IDataContext dataContext) {
         this.dataContext = dataContext;
-        this.context = context;
     }
 
     @Override
@@ -41,7 +38,6 @@ public class Login extends BroadcastReceiver implements ILogin {
 
     @Override
     public void execute() {
-
         AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
                 Uri.parse(dataContext.getAuthorizationRequestConfig().getAuthEndpointUri()),
                 Uri.parse(dataContext.getAuthorizationRequestConfig().getTokenEndpointUri())
@@ -59,9 +55,9 @@ public class Login extends BroadcastReceiver implements ILogin {
         builder.setScopes("openid profile email");
         AuthorizationRequest request = builder.build();
 
-        AuthorizationService authorizationService = new AuthorizationService(context);
+        AuthorizationService authorizationService = new AuthorizationService(dataContext.getContext());
         Intent postAuthorizationIntent = new Intent(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, request.hashCode(), postAuthorizationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(dataContext.getContext(), request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
 
@@ -72,7 +68,7 @@ public class Login extends BroadcastReceiver implements ILogin {
 
         if (response != null) {
             Log.i(IDataContext.LOG_TAG, String.format("Handled Authorization Response %s ", authState.toString()));
-            AuthorizationService service = new AuthorizationService(context);
+            AuthorizationService service = new AuthorizationService(dataContext.getContext());
 
             service.performTokenRequest(response.createTokenExchangeRequest(), new AuthorizationService.TokenResponseCallback() {
                 @Override
@@ -108,6 +104,7 @@ public class Login extends BroadcastReceiver implements ILogin {
     }
 
     private void persistAuthState(@NonNull AuthState authState) {
+        Context context = dataContext.getContext();
         context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
                 .putString(IDataContext.AUTH_STATE, authState.toJsonString())
                 .commit();
@@ -116,6 +113,7 @@ public class Login extends BroadcastReceiver implements ILogin {
 
     @Nullable
     private AuthState restoreAuthState() {
+        Context context = dataContext.getContext();
         String jsonString = context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getString(IDataContext.AUTH_STATE, null);
         if (!TextUtils.isEmpty(jsonString)) {

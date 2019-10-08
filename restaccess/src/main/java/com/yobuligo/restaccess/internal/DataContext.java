@@ -11,8 +11,9 @@ public class DataContext implements IDataContext {
     private TokenResponse tokenResponse;
     private Context context;
 
-    public DataContext(IAuthorizationRequestConfig authorizationRequestConfig) {
+    public DataContext(IAuthorizationRequestConfig authorizationRequestConfig, Context context) {
         this.authorizationRequestConfig = authorizationRequestConfig;
+        this.context = context;
     }
 
     @Override

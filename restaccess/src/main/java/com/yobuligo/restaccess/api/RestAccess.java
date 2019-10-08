@@ -12,13 +12,15 @@ import com.yobuligo.restaccess.internal.Logout;
 public class RestAccess implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
     private IDataContext dataContext;
+    private Context context;
 
-    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig) {
+    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, Context context) {
         this.authorizationRequestConfig = authorizationRequestConfig;
+        this.context = context;
     }
 
-    public Login createLogin(Context context){
-        return new Login(getDataContext(), context);
+    public Login createLogin(){
+        return new Login(getDataContext());
     }
 
     public void executeLogin(Login login){
@@ -26,8 +28,8 @@ public class RestAccess implements IRestAccess {
     }
 
     @Override
-    public void login(Context context) {
-        ILogin login = new Login(getDataContext(), context);
+    public void login() {
+        ILogin login = new Login(getDataContext());
         login.execute();
     }
 
@@ -44,7 +46,7 @@ public class RestAccess implements IRestAccess {
 
     private IDataContext getDataContext() {
         if (dataContext == null) {
-            dataContext = new DataContext(authorizationRequestConfig);
+            dataContext = new DataContext(authorizationRequestConfig, context);
         }
 
         return dataContext;
