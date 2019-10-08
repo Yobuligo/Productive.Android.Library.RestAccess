@@ -42,19 +42,9 @@ public class MainActivity extends AppCompatActivity {
                         "login-app"
                 );
 
-                RestAccess restAccess = new RestAccess(authorizationRequestConfig);
-
-                Login login = restAccess.createLogin(view.getContext());
-
-                //Register on Broadcast Events
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction("com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE");
-                registerReceiver(login, intentFilter);
-
-                restAccess.executeLogin(login);
-
-                //restAccess.login(view.getContext());
-
+                RestAccess restAccess = new RestAccess(authorizationRequestConfig, view.getContext());
+                restAccess.logout();
+                restAccess.login();
             }
         });
     }

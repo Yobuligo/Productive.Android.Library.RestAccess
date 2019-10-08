@@ -14,6 +14,7 @@ public interface IDataContext {
     String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     String AUTH_STATE = "AUTH_STATE";
     String USED_INTENT = "USED_INTENT";
+    String HANDLE_AUTHORIZATION_RESPONSE = "HANDLE_AUTHORIZATION_RESPONSE";
 
     IAuthorizationRequestConfig getAuthorizationRequestConfig();
     TokenResponse getTokenResponse();

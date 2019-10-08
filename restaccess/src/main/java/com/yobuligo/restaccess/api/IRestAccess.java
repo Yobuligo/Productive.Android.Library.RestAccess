@@ -9,7 +9,7 @@ public interface IRestAccess {
     /**
      * Method to display a login screen and login the user by user credentials
      */
-    void login(Context context);
+    void login();
 
     /**
      * Method to logout the current user

@@ -1,39 +1,34 @@
 package com.yobuligo.restaccess.api;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 
 import com.yobuligo.restaccess.internal.DataContext;
 import com.yobuligo.restaccess.internal.IDataContext;
-import com.yobuligo.restaccess.internal.ILogin;
-import com.yobuligo.restaccess.internal.ILogout;
 import com.yobuligo.restaccess.internal.Login;
 import com.yobuligo.restaccess.internal.Logout;
 
 public class RestAccess implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
+    private Context context;
     private IDataContext dataContext;
 
-    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig) {
+    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, Context context) {
         this.authorizationRequestConfig = authorizationRequestConfig;
-    }
-
-    public Login createLogin(Context context){
-        return new Login(getDataContext(), context);
-    }
-
-    public void executeLogin(Login login){
-        login.execute();
+        this.context = context;
     }
 
     @Override
-    public void login(Context context) {
-        ILogin login = new Login(getDataContext(), context);
+    public void login() {
+        Login login = new Login(getDataContext());
+        registerLoginAsBroadcastReceiver(login);
         login.execute();
     }
 
     @Override
     public void logout() {
-        ILogout logout = new Logout(getDataContext());
+        Logout logout = new Logout(getDataContext());
         logout.execute();
     }
 
@@ -44,9 +39,16 @@ public class RestAccess implements IRestAccess {
 
     private IDataContext getDataContext() {
         if (dataContext == null) {
-            dataContext = new DataContext(authorizationRequestConfig);
+            dataContext = new DataContext(authorizationRequestConfig, context);
         }
 
         return dataContext;
+    }
+
+    private void registerLoginAsBroadcastReceiver(BroadcastReceiver broadcastReceiver){
+        Context context = getDataContext().getContext();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);
+        context.registerReceiver(broadcastReceiver, intentFilter);
     }
 }
