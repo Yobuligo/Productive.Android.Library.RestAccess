@@ -22,10 +22,6 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 
 public class Login extends BroadcastReceiver implements ILogin {
-    private static final String LOG_TAG = "AppAuth";
-    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
-    private static final String AUTH_STATE = "AUTH_STATE";
-    private static final String USED_INTENT = "USED_INTENT";
 
     private AuthState mAuthState;
     private IDataContext dataContext;
@@ -77,19 +73,19 @@ public class Login extends BroadcastReceiver implements ILogin {
         final AuthState authState = new AuthState(response, error);
 
         if (response != null) {
-            Log.i(LOG_TAG, String.format("Handled Authorization Response %s ", authState.toString()));
+            Log.i(IDataContext.LOG_TAG, String.format("Handled Authorization Response %s ", authState.toString()));
             AuthorizationService service = new AuthorizationService(context);
 
             service.performTokenRequest(response.createTokenExchangeRequest(), new AuthorizationService.TokenResponseCallback() {
                 @Override
                 public void onTokenRequestCompleted(@Nullable TokenResponse tokenResponse, @Nullable AuthorizationException exception) {
                     if (exception != null) {
-                        Log.w(LOG_TAG, "Token Exchange failed", exception);
+                        Log.w(IDataContext.LOG_TAG, "Token Exchange failed", exception);
                     } else {
                         if (tokenResponse != null) {
                             authState.update(tokenResponse, exception);
                             persistAuthState(authState);
-                            Log.i(LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
+                            Log.i(IDataContext.LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
                         }
                     }
                 }
@@ -102,9 +98,9 @@ public class Login extends BroadcastReceiver implements ILogin {
             String action = intent.getAction();
             switch (action) {
                 case "com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE":
-                    if (!intent.hasExtra(USED_INTENT)) {
+                    if (!intent.hasExtra(IDataContext.USED_INTENT)) {
                         handleAuthorizationResponse(intent);
-                        intent.putExtra(USED_INTENT, true);
+                        intent.putExtra(IDataContext.USED_INTENT, true);
                     }
                     break;
                 default:
@@ -114,16 +110,16 @@ public class Login extends BroadcastReceiver implements ILogin {
     }
 
     private void persistAuthState(@NonNull AuthState authState) {
-        context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
-                .putString(AUTH_STATE, authState.toJsonString())
+        context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
+                .putString(IDataContext.AUTH_STATE, authState.toJsonString())
                 .commit();
         enablePostAuthorizationFlows();
     }
 
     @Nullable
     private AuthState restoreAuthState() {
-        String jsonString = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getString(AUTH_STATE, null);
+        String jsonString = context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .getString(IDataContext.AUTH_STATE, null);
         if (!TextUtils.isEmpty(jsonString)) {
             try {
                 return AuthState.fromJson(jsonString);
