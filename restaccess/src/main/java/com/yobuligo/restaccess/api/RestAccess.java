@@ -8,6 +8,7 @@ import com.yobuligo.restaccess.internal.DataContext;
 import com.yobuligo.restaccess.internal.IDataContext;
 import com.yobuligo.restaccess.internal.Login;
 import com.yobuligo.restaccess.internal.Logout;
+import com.yobuligo.restaccess.internal.SendRequest;
 
 public class RestAccess implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
@@ -33,8 +34,9 @@ public class RestAccess implements IRestAccess {
     }
 
     @Override
-    public void sendRequest() {
-
+    public void sendRequest(String path) {
+        SendRequest sendRequest = new SendRequest(getDataContext());
+        sendRequest.execute(path);
     }
 
     private IDataContext getDataContext() {

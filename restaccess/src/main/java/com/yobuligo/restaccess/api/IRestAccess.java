@@ -19,5 +19,5 @@ public interface IRestAccess {
     /**
      * Method to send a rest request with the credentials of the logged in user
      */
-    void sendRequest();
+    void sendRequest(String path);
 }
