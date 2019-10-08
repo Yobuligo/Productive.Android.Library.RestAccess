@@ -17,6 +17,14 @@ public class RestAccess implements IRestAccess {
         this.authorizationRequestConfig = authorizationRequestConfig;
     }
 
+    public Login createLogin(Context context){
+        return new Login(getDataContext(), context);
+    }
+
+    public void executeLogin(Login login){
+        login.execute();
+    }
+
     @Override
     public void login(Context context) {
         ILogin login = new Login(getDataContext(), context);

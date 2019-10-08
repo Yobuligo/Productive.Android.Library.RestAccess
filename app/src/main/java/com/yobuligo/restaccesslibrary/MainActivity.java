@@ -1,5 +1,6 @@
 package com.yobuligo.restaccesslibrary;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -7,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.yobuligo.restaccess.api.AuthorizationRequestConfig;
 import com.yobuligo.restaccess.api.IAuthorizationRequestConfig;
 import com.yobuligo.restaccess.api.RestAccess;
+import com.yobuligo.restaccess.internal.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,12 +17,17 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +43,17 @@ public class MainActivity extends AppCompatActivity {
                 );
 
                 RestAccess restAccess = new RestAccess(authorizationRequestConfig);
-                restAccess.login(view.getContext());
+
+                Login login = restAccess.createLogin(view.getContext());
+
+                //Register on Broadcast Events
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction("com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE");
+                registerReceiver(login, intentFilter);
+
+                restAccess.executeLogin(login);
+
+                //restAccess.login(view.getContext());
 
             }
         });

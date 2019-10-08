@@ -1,6 +1,7 @@
 package com.yobuligo.restaccess.internal;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,17 +21,26 @@ import net.openid.appauth.TokenResponse;
 
 import org.json.JSONException;
 
-public class Login implements ILogin {
+public class Login extends BroadcastReceiver implements ILogin {
     private static final String LOG_TAG = "AppAuth";
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     private static final String AUTH_STATE = "AUTH_STATE";
+    private static final String USED_INTENT = "USED_INTENT";
+
     private AuthState mAuthState;
     private IDataContext dataContext;
     private Context context;
 
+    public Login(){}
+
     public Login(IDataContext dataContext, Context context) {
         this.dataContext = dataContext;
         this.context = context;
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        checkIntent(intent);
     }
 
     @Override
@@ -42,7 +52,7 @@ public class Login implements ILogin {
         );
 
         String clientId = dataContext.getAuthorizationRequestConfig().getClientId();
-        Uri redirectUri = Uri.parse("com.google.codelabs.appauth:/oauth2callback");
+        Uri redirectUri = Uri.parse("com.yobuligo.restaccess.internal:/oauth2callback");
         AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(
                 serviceConfiguration,
                 clientId,
@@ -54,9 +64,10 @@ public class Login implements ILogin {
         AuthorizationRequest request = builder.build();
 
         AuthorizationService authorizationService = new AuthorizationService(context);
-        String action = "com.google.codelabs.appauth.HANDLE_AUTHORIZATION_RESPONSE";
+        String action = "com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE";
         Intent postAuthorizationIntent = new Intent(action);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, request.hashCode(), postAuthorizationIntent, 0);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(context, request.hashCode(), postAuthorizationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
 
@@ -83,6 +94,22 @@ public class Login implements ILogin {
                     }
                 }
             });
+        }
+    }
+
+    private void checkIntent(@Nullable Intent intent) {
+        if (intent != null) {
+            String action = intent.getAction();
+            switch (action) {
+                case "com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE":
+                    if (!intent.hasExtra(USED_INTENT)) {
+                        handleAuthorizationResponse(intent);
+                        intent.putExtra(USED_INTENT, true);
+                    }
+                    break;
+                default:
+                    // do nothing
+            }
         }
     }
 
