@@ -18,5 +18,6 @@ public interface IDataContext {
 
     IAuthorizationRequestConfig getAuthorizationRequestConfig();
     TokenResponse getTokenResponse();
+    void setTokenResponse(TokenResponse tokenResponse);
     Context getContext();
 }
