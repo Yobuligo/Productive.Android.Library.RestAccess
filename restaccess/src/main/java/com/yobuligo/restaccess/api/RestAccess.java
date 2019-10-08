@@ -20,14 +20,6 @@ public class RestAccess implements IRestAccess {
         this.context = context;
     }
 
-    public Login createLogin() {
-        return new Login(getDataContext());
-    }
-
-    public void executeLogin(Login login) {
-        login.execute();
-    }
-
     @Override
     public void login() {
         Login login = new Login(getDataContext());

@@ -27,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
-
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,18 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 );
 
                 RestAccess restAccess = new RestAccess(authorizationRequestConfig, view.getContext());
-
-                Login login = restAccess.createLogin();
-
-                //Register on Broadcast Events
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);
-                registerReceiver(login, intentFilter);
-
-                restAccess.executeLogin(login);
-
-                //restAccess.login(view.getContext());
-
+                restAccess.login();
             }
         });
     }
