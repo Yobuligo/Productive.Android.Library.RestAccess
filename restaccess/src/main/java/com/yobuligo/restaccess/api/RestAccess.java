@@ -11,8 +11,8 @@ import com.yobuligo.restaccess.internal.Logout;
 
 public class RestAccess implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
-    private Context context;
     private IDataContext dataContext;
+    private Context context;
 
     public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, Context context) {
         this.authorizationRequestConfig = authorizationRequestConfig;

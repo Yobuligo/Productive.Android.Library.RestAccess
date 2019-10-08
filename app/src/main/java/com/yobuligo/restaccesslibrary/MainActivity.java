@@ -1,6 +1,5 @@
 package com.yobuligo.restaccesslibrary;
 
-import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,7 +7,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.yobuligo.restaccess.api.AuthorizationRequestConfig;
 import com.yobuligo.restaccess.api.IAuthorizationRequestConfig;
 import com.yobuligo.restaccess.api.RestAccess;
-import com.yobuligo.restaccess.internal.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,9 +24,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
-
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 );
 
                 RestAccess restAccess = new RestAccess(authorizationRequestConfig, view.getContext());
-                restAccess.logout();
                 restAccess.login();
             }
         });

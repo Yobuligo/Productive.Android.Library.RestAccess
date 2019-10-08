@@ -27,6 +27,11 @@ public class DataContext implements IDataContext {
     }
 
     @Override
+    public void setTokenResponse(TokenResponse tokenResponse) {
+        this.tokenResponse = tokenResponse;
+    }
+
+    @Override
     public Context getContext() {
         return context;
     }

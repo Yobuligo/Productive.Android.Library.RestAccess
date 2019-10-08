@@ -22,12 +22,8 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 
 public class Login extends BroadcastReceiver implements ILogin {
-    private final String PATH_HANDLE_AUTHORIZATION_RESPONSE = "com.yobuligo.restaccess.internal." + IDataContext.HANDLE_AUTHORIZATION_RESPONSE;
     private AuthState mAuthState;
     private IDataContext dataContext;
-
-    public Login() {
-    }
 
     public Login(IDataContext dataContext) {
         this.dataContext = dataContext;
@@ -40,7 +36,6 @@ public class Login extends BroadcastReceiver implements ILogin {
 
     @Override
     public void execute() {
-
         AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
                 Uri.parse(dataContext.getAuthorizationRequestConfig().getAuthEndpointUri()),
                 Uri.parse(dataContext.getAuthorizationRequestConfig().getTokenEndpointUri())
@@ -59,15 +54,15 @@ public class Login extends BroadcastReceiver implements ILogin {
         AuthorizationRequest request = builder.build();
 
         AuthorizationService authorizationService = new AuthorizationService(dataContext.getContext());
-        Intent postAuthorizationIntent = new Intent(PATH_HANDLE_AUTHORIZATION_RESPONSE);
+        Intent postAuthorizationIntent = new Intent(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(dataContext.getContext(), request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
 
-        private void handleAuthorizationResponse(@NonNull Intent intent) {
-            AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
-            AuthorizationException error = AuthorizationException.fromIntent(intent);
-            final AuthState authState = new AuthState(response, error);
+    private void handleAuthorizationResponse(@NonNull Intent intent) {
+        AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
+        AuthorizationException error = AuthorizationException.fromIntent(intent);
+        final AuthState authState = new AuthState(response, error);
 
         if (response != null) {
             Log.i(IDataContext.LOG_TAG, String.format("Handled Authorization Response %s ", authState.toString()));
@@ -94,7 +89,7 @@ public class Login extends BroadcastReceiver implements ILogin {
         if (intent != null) {
             String action = intent.getAction();
             switch (action) {
-                case PATH_HANDLE_AUTHORIZATION_RESPONSE:
+                case IDataContext.HANDLE_AUTHORIZATION_RESPONSE:
                     if (!intent.hasExtra(IDataContext.USED_INTENT)) {
                         handleAuthorizationResponse(intent);
                         intent.putExtra(IDataContext.USED_INTENT, true);
@@ -107,7 +102,8 @@ public class Login extends BroadcastReceiver implements ILogin {
     }
 
     private void persistAuthState(@NonNull AuthState authState) {
-        dataContext.getContext().getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
+        Context context = dataContext.getContext();
+        context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
                 .putString(IDataContext.AUTH_STATE, authState.toJsonString())
                 .commit();
         enablePostAuthorizationFlows();
@@ -115,7 +111,8 @@ public class Login extends BroadcastReceiver implements ILogin {
 
     @Nullable
     private AuthState restoreAuthState() {
-        String jsonString = dataContext.getContext().getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        Context context = dataContext.getContext();
+        String jsonString = context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getString(IDataContext.AUTH_STATE, null);
         if (!TextUtils.isEmpty(jsonString)) {
             try {
