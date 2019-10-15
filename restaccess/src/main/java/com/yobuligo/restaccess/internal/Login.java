@@ -81,8 +81,8 @@ public class Login extends BroadcastReceiver implements ILogin {
                             authState.update(tokenResponse, exception);
                             persistAuthState(authState);
                             Log.i(IDataContext.LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
-                            onLoginCompleted();
                             returnToPreviousActivity();
+                            onLoginCompleted();
                         }
                     }
                 }
