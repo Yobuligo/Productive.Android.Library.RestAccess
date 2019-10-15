@@ -20,4 +20,15 @@ public interface IRestAccess {
      * Method to send a rest request with the credentials of the logged in user
      */
     void sendRequest(String path);
+
+    /**
+     * Sets a login listener that will be informed when a login was completed
+     */
+    void setOnLoginListener(ILoginListener loginListener);
+
+    /**
+     * Sets a logout lister that will be informed when a logout was completed
+     */
+    void setOnLogoutListener(ILogoutListener logoutListener);
+
 }
