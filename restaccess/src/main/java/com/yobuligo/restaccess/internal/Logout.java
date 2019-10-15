@@ -2,6 +2,8 @@ package com.yobuligo.restaccess.internal;
 
 import android.content.Context;
 
+import com.yobuligo.restaccess.api.ILogoutListener;
+
 public class Logout implements ILogout {
     private IDataContext dataContext;
 
@@ -16,5 +18,12 @@ public class Logout implements ILogout {
                 .edit()
                 .remove(IDataContext.AUTH_STATE)
                 .apply();
+        onLogoutCompleted();
+    }
+
+    private void onLogoutCompleted() {
+        for (ILogoutListener logoutListener : dataContext.getOnLogoutListeners()) {
+            logoutListener.onLogout();
+        }
     }
 }

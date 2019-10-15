@@ -12,6 +12,12 @@ public interface IRestAccess {
     void login();
 
     /**
+     * Returns if a user is logged in
+     * @return
+     */
+    Boolean isLoggedIn();
+
+    /**
      * Method to logout the current user
      */
     void logout();

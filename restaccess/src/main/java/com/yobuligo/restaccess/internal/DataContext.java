@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.yobuligo.restaccess.api.IAuthorizationRequestConfig;
+import com.yobuligo.restaccess.api.ILoginListener;
+import com.yobuligo.restaccess.api.ILogoutListener;
 import com.yobuligo.restaccess.api.IWebserviceRequestConfig;
 
 import net.openid.appauth.AuthState;
@@ -11,12 +13,16 @@ import net.openid.appauth.AuthorizationService;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+
 public class DataContext implements IDataContext {
     private IAuthorizationRequestConfig authorizationRequestConfig;
     private IWebserviceRequestConfig webserviceRequestConfig;
     private Context context;
     private AuthorizationService authorizationService;
     private AuthState authState;
+    private ArrayList<ILoginListener> loginListeners = new ArrayList<>();
+    private ArrayList<ILogoutListener> logoutListeners = new ArrayList<>();
 
     public DataContext(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context) {
         this.authorizationRequestConfig = authorizationRequestConfig;
@@ -70,5 +76,25 @@ public class DataContext implements IDataContext {
     @Override
     public void setAuthState(AuthState authState) {
         this.authState = authState;
+    }
+
+    @Override
+    public void setOnLoginListener(ILoginListener loginListener) {
+        loginListeners.add(loginListener);
+    }
+
+    @Override
+    public void setOnLogoutListener(ILogoutListener logoutListener) {
+        logoutListeners.add(logoutListener);
+    }
+
+    @Override
+    public ArrayList<ILoginListener> getOnLoginListeners() {
+        return loginListeners;
+    }
+
+    @Override
+    public ArrayList<ILogoutListener> getOnLogoutListeners() {
+        return logoutListeners;
     }
 }

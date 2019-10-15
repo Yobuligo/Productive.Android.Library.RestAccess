@@ -11,6 +11,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.yobuligo.restaccess.api.ILoginListener;
+
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
@@ -77,6 +79,7 @@ public class Login extends BroadcastReceiver implements ILogin {
                             authState.update(tokenResponse, exception);
                             persistAuthState(authState);
                             Log.i(IDataContext.LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
+                            onLoginCompleted();
                         }
                     }
                 }
@@ -111,5 +114,11 @@ public class Login extends BroadcastReceiver implements ILogin {
     private void enablePostAuthorizationFlows() {
         AuthState authState = dataContext.restoreAuthState();
         dataContext.setAuthState(authState);
+    }
+
+    private void onLoginCompleted() {
+        for (ILoginListener loginListener : dataContext.getOnLoginListeners()) {
+            loginListener.onLogin();
+        }
     }
 }
