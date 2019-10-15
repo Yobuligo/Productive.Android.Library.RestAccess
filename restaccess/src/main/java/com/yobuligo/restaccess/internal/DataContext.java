@@ -1,5 +1,6 @@
 package com.yobuligo.restaccess.internal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -18,18 +19,16 @@ import java.util.ArrayList;
 public class DataContext<T> implements IDataContext {
     private IAuthorizationRequestConfig authorizationRequestConfig;
     private IWebserviceRequestConfig webserviceRequestConfig;
-    private Context context;
     private AuthorizationService authorizationService;
     private AuthState authState;
     private ArrayList<ILoginListener> loginListeners = new ArrayList<>();
     private ArrayList<ILogoutListener> logoutListeners = new ArrayList<>();
-    private Class<T> activityClass;
+    private Activity activity;
 
-    public DataContext(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context, Class<T> activityClass) {
+    public DataContext(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Activity activity) {
         this.authorizationRequestConfig = authorizationRequestConfig;
         this.webserviceRequestConfig = webserviceRequestConfig;
-        this.context = context;
-        this.activityClass = activityClass;
+        this.activity = activity;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class DataContext<T> implements IDataContext {
 
     @Override
     public Context getContext() {
-        return context;
+        return activity;
     }
 
     @Override
@@ -102,6 +101,6 @@ public class DataContext<T> implements IDataContext {
 
     @Override
     public Class getActivityClass() {
-        return activityClass;
+        return activity.getClass();
     }
 }

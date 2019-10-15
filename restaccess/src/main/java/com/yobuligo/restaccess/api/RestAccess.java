@@ -1,5 +1,6 @@
 package com.yobuligo.restaccess.api;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -19,14 +20,12 @@ public class RestAccess<T> implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
     private IWebserviceRequestConfig webserviceRequestConfig;
     private IDataContext dataContext;
-    private Context context;
-    private Class<T> activityClass;
+    private Activity activity;
 
-    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context, Class<T> activityClass) {
+    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Activity activity) {
         this.authorizationRequestConfig = authorizationRequestConfig;
         this.webserviceRequestConfig = webserviceRequestConfig;
-        this.context = context;
-        this.activityClass = activityClass;
+        this.activity = activity;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class RestAccess<T> implements IRestAccess {
 
     private IDataContext getDataContext() {
         if (dataContext == null) {
-            dataContext = new DataContext(authorizationRequestConfig, webserviceRequestConfig, context, activityClass);
+            dataContext = new DataContext(authorizationRequestConfig, webserviceRequestConfig, activity);
         }
 
         return dataContext;
