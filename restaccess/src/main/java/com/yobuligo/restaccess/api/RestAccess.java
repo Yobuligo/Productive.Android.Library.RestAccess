@@ -12,11 +12,13 @@ import com.yobuligo.restaccess.internal.SendRequest;
 
 public class RestAccess implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
+    private IWebserviceRequestConfig webserviceRequestConfig;
     private IDataContext dataContext;
     private Context context;
 
-    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, Context context) {
+    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context) {
         this.authorizationRequestConfig = authorizationRequestConfig;
+        this.webserviceRequestConfig = webserviceRequestConfig;
         this.context = context;
     }
 
@@ -41,13 +43,13 @@ public class RestAccess implements IRestAccess {
 
     private IDataContext getDataContext() {
         if (dataContext == null) {
-            dataContext = new DataContext(authorizationRequestConfig, context);
+            dataContext = new DataContext(authorizationRequestConfig, webserviceRequestConfig, context);
         }
 
         return dataContext;
     }
 
-    private void registerLoginAsBroadcastReceiver(BroadcastReceiver broadcastReceiver){
+    private void registerLoginAsBroadcastReceiver(BroadcastReceiver broadcastReceiver) {
         Context context = getDataContext().getContext();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(IDataContext.HANDLE_AUTHORIZATION_RESPONSE);

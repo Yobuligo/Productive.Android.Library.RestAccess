@@ -3,7 +3,10 @@ package com.yobuligo.restaccess.internal;
 import android.content.Context;
 
 import com.yobuligo.restaccess.api.IAuthorizationRequestConfig;
+import com.yobuligo.restaccess.api.IWebserviceRequestConfig;
 
+import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.TokenResponse;
 
 /**
@@ -17,7 +20,9 @@ public interface IDataContext {
     String HANDLE_AUTHORIZATION_RESPONSE = "com.yobuligo.restaccess.internal.HANDLE_AUTHORIZATION_RESPONSE";
 
     IAuthorizationRequestConfig getAuthorizationRequestConfig();
-    TokenResponse getTokenResponse();
-    void setTokenResponse(TokenResponse tokenResponse);
+    IWebserviceRequestConfig getWebserverRequestConfig();
     Context getContext();
+    AuthorizationService getAuthorizationService();
+    AuthState restoreAuthState();
+    void setAuthState(AuthState authState);
 }

@@ -22,7 +22,6 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 
 public class Login extends BroadcastReceiver implements ILogin {
-    private AuthState mAuthState;
     private IDataContext dataContext;
 
     public Login(IDataContext dataContext) {
@@ -109,22 +108,8 @@ public class Login extends BroadcastReceiver implements ILogin {
         enablePostAuthorizationFlows();
     }
 
-    @Nullable
-    private AuthState restoreAuthState() {
-        Context context = dataContext.getContext();
-        String jsonString = context.getSharedPreferences(IDataContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getString(IDataContext.AUTH_STATE, null);
-        if (!TextUtils.isEmpty(jsonString)) {
-            try {
-                return AuthState.fromJson(jsonString);
-            } catch (JSONException jsonException) {
-                // should never happen
-            }
-        }
-        return null;
-    }
-
     private void enablePostAuthorizationFlows() {
-        mAuthState = restoreAuthState();
+        AuthState authState = dataContext.restoreAuthState();
+        dataContext.setAuthState(authState);
     }
 }
