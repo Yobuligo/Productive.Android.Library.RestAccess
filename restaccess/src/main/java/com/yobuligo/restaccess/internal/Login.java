@@ -23,6 +23,8 @@ import net.openid.appauth.TokenResponse;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+
 public class Login extends BroadcastReceiver implements ILogin {
     private IDataContext dataContext;
 
@@ -80,11 +82,18 @@ public class Login extends BroadcastReceiver implements ILogin {
                             persistAuthState(authState);
                             Log.i(IDataContext.LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
                             onLoginCompleted();
+                            returnToPreviousActivity();
                         }
                     }
                 }
             });
         }
+    }
+
+    private void returnToPreviousActivity() {
+        Intent intent = new Intent(dataContext.getContext(), dataContext.getActivityClass());
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        dataContext.getContext().startActivity(intent);
     }
 
     private void checkIntent(@Nullable Intent intent) {
@@ -117,7 +126,8 @@ public class Login extends BroadcastReceiver implements ILogin {
     }
 
     private void onLoginCompleted() {
-        for (ILoginListener loginListener : dataContext.getOnLoginListeners()) {
+        ArrayList<ILoginListener> loginListeners = dataContext.getOnLoginListeners();
+        for (ILoginListener loginListener : loginListeners) {
             loginListener.onLogin();
         }
     }

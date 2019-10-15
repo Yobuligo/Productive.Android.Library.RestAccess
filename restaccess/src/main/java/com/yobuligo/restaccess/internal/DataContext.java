@@ -15,7 +15,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class DataContext implements IDataContext {
+public class DataContext<T> implements IDataContext {
     private IAuthorizationRequestConfig authorizationRequestConfig;
     private IWebserviceRequestConfig webserviceRequestConfig;
     private Context context;
@@ -23,11 +23,13 @@ public class DataContext implements IDataContext {
     private AuthState authState;
     private ArrayList<ILoginListener> loginListeners = new ArrayList<>();
     private ArrayList<ILogoutListener> logoutListeners = new ArrayList<>();
+    private Class<T> activityClass;
 
-    public DataContext(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context) {
+    public DataContext(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context, Class<T> activityClass) {
         this.authorizationRequestConfig = authorizationRequestConfig;
         this.webserviceRequestConfig = webserviceRequestConfig;
         this.context = context;
+        this.activityClass = activityClass;
     }
 
     @Override
@@ -96,5 +98,10 @@ public class DataContext implements IDataContext {
     @Override
     public ArrayList<ILogoutListener> getOnLogoutListeners() {
         return logoutListeners;
+    }
+
+    @Override
+    public Class getActivityClass() {
+        return activityClass;
     }
 }

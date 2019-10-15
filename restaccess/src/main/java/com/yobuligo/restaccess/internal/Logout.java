@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.yobuligo.restaccess.api.ILogoutListener;
 
+import java.util.ArrayList;
+
 public class Logout implements ILogout {
     private IDataContext dataContext;
 
@@ -22,7 +24,8 @@ public class Logout implements ILogout {
     }
 
     private void onLogoutCompleted() {
-        for (ILogoutListener logoutListener : dataContext.getOnLogoutListeners()) {
+        ArrayList<ILogoutListener> logoutListeners = dataContext.getOnLogoutListeners();
+        for (ILogoutListener logoutListener : logoutListeners) {
             logoutListener.onLogout();
         }
     }

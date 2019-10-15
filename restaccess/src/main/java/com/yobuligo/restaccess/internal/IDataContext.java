@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Object that contains all relevant runtime data
  */
-public interface IDataContext {
+public interface IDataContext<T> {
     String LOG_TAG = "AppAuth";
     String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     String AUTH_STATE = "AUTH_STATE";
@@ -43,4 +43,6 @@ public interface IDataContext {
     ArrayList<ILoginListener> getOnLoginListeners();
 
     ArrayList<ILogoutListener> getOnLogoutListeners();
+
+    Class<T> getActivityClass();
 }

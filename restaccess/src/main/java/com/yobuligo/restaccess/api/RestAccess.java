@@ -15,16 +15,19 @@ import net.openid.appauth.AuthState;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class RestAccess implements IRestAccess {
+public class RestAccess<T> implements IRestAccess {
     private IAuthorizationRequestConfig authorizationRequestConfig;
     private IWebserviceRequestConfig webserviceRequestConfig;
     private IDataContext dataContext;
     private Context context;
+    private Class<T> activityClass;
 
-    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context) {
+    public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context, Class<T> activityClass) {
+        Class<RestAccess> test = RestAccess.class;
         this.authorizationRequestConfig = authorizationRequestConfig;
         this.webserviceRequestConfig = webserviceRequestConfig;
         this.context = context;
+        this.activityClass = activityClass;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class RestAccess implements IRestAccess {
 
     private IDataContext getDataContext() {
         if (dataContext == null) {
-            dataContext = new DataContext(authorizationRequestConfig, webserviceRequestConfig, context);
+            dataContext = new DataContext(authorizationRequestConfig, webserviceRequestConfig, context, activityClass);
         }
 
         return dataContext;
