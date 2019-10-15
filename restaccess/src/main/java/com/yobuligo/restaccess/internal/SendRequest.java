@@ -31,6 +31,11 @@ public class SendRequest implements ISendRequest {
     public void execute(final String path) {
         AuthorizationService authorizationService = dataContext.getAuthorizationService();
         AuthState authstate = dataContext.restoreAuthState();
+        if (authstate == null){
+            //needs to login
+            return;
+        }
+
         authstate.performActionWithFreshTokens(authorizationService, new AuthState.AuthStateAction() {
             @Override
             public void execute(

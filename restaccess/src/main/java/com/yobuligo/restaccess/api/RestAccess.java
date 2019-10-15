@@ -23,7 +23,6 @@ public class RestAccess<T> implements IRestAccess {
     private Class<T> activityClass;
 
     public RestAccess(IAuthorizationRequestConfig authorizationRequestConfig, IWebserviceRequestConfig webserviceRequestConfig, Context context, Class<T> activityClass) {
-        Class<RestAccess> test = RestAccess.class;
         this.authorizationRequestConfig = authorizationRequestConfig;
         this.webserviceRequestConfig = webserviceRequestConfig;
         this.context = context;

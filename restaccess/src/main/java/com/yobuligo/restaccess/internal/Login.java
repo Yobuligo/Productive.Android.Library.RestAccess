@@ -92,7 +92,6 @@ public class Login extends BroadcastReceiver implements ILogin {
 
     private void returnToPreviousActivity() {
         Intent intent = new Intent(dataContext.getContext(), dataContext.getActivityClass());
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         dataContext.getContext().startActivity(intent);
     }
 
